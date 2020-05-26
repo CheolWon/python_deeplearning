@@ -3,8 +3,7 @@ import numpy as np
 
 def neural_element(activation, weight):
     SDCodeLUT = np.array([0, 1, 2, 5, 4, 5, 6, 9, 8, 9, 10, 0, 15, 0 ,14, 13])
-    INV1 = 0
-    INV2 = 0
+
     SDCode = SDCodeLUT[abs(weight)]
 
     SH1 = (SDCode >> 2) & 3
@@ -44,7 +43,7 @@ def neural_element(activation, weight):
         barrelShifter2 = -barrelShifter2 - 1
 
     return barrelShifter1 + barrelShifter2, INV1 + INV2
-
+'''
 f = open("./neural_element_result/neural_element_test_result.txt", 'w')
 
 #양수 x 양수
@@ -108,15 +107,28 @@ for activation in range(0, -128, -1):
 
 f.close()
 
-sumBP, sumINV = neural_element(1, 3)
+activation = 1
+weight = 3
 
-print('sumBP : ', sumBP)
-print('sumINV : ', sumINV)
+sumBP, sumINV = neural_element(activation, weight)
+print('activation : %d, weight : %d'%(activation, weight))
+print('sumBP : %d, sumINV : %d\n'%(sumBP, sumINV))
 
-a = 13
+activation = 5
+weight = -12
+sumBP, sumINV = neural_element(activation, weight)
+print('activation : %d, weight : %d'%(activation, weight))
+print('sumBP : %d, sumINV : %d\n'%(sumBP, sumINV))
+activation = 7
+weight = -3
+sumBP, sumINV = neural_element(activation, weight)
+print('activation : %d, weight : %d'%(activation, weight))
+print('sumBP : %d, sumINV : %d\n'%(sumBP, sumINV))
 
-if(a != 11) & (a != 3):
-    print('A')
+activation = -8
+weight = -4
+sumBP, sumINV = neural_element(activation, weight)
+print('activation : %d, weight : %d'%(activation, weight))
+print('sumBP : %d, sumINV : %d'%(sumBP, sumINV))
 
-
-#print('a << 0 : ', a<<-1)
+'''

@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import operator
+import Conv2d as cv2d
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
@@ -46,7 +47,6 @@ scale_conv = 5
 scale_fc = 5
 
 shift_right = 6
-
 W_conv1 = weight_variable([kernel_size, kernel_size, 1, conv_filter1])
 W_conv1 = scaling_up(W_conv1, scale_conv)
 b_conv1 = bias_variable([conv_filter1])
@@ -80,25 +80,48 @@ save_file = './model.ckpt'
 saver = tf.train.Saver()
 
 saver.restore(sess, save_file)
+
+
+np_W_conv1 = sess.run(W_conv1)
+np_b_conv1 = sess.run(b_conv1)
+
+np_W_conv2 = sess.run(W_conv2)
+np_b_conv2 = sess.run(b_conv2)
+
+
 count = 0
 print('floating')
 print_featuremap = 0
 save_weight = 0
+print_weight_channel = 0
 for i in range(0, 1000):
     x_image = mnist.test.images[i]
     x_label = mnist.test.labels[i]
     x_image = x_image.reshape(28, 28)
 
     x_image = x_image[np.newaxis, :, :, np.newaxis]
-
+    '''
     h_conv1 = scaling_down(conv2d(tf.floor(127*x_image), W_conv1) + b_conv1, shift_right)
     h_conv1 = tf.nn.relu(h_conv1)
     h_pool1 = max_pool_2x2(h_conv1)
 
+
     h_conv2 = scaling_down(conv2d(h_pool1, W_conv2) + b_conv2, shift_right)
     h_conv2 = tf.nn.relu(h_conv2)
+    '''
 
+    #npInImage = sess.run(x_image)
+
+    h_conv1_np = scaling_down(cv2d.conv2d(np.floor(127*x_image), np_W_conv1, np_b_conv1), shift_right)
+    h_conv1 = tf.nn.relu(h_conv1_np)
+    h_pool1 = max_pool_2x2(h_conv1)
+
+    np_h_pool1 = sess.run(h_pool1)
+
+    h_conv2 = scaling_down(cv2d.conv2d(np_h_pool1, np_W_conv2, np_b_conv2), shift_right)
+    h_conv2 = tf.nn.relu(h_conv2)
     h_pool2 = max_pool_2x2(h_conv2)
+
     h_pool2_flat = tf.reshape(h_pool2, [-1, 5*5*conv_filter2])
 
     #h_pool2_flat_np = sess.run(h_pool2_flat)
@@ -110,7 +133,7 @@ for i in range(0, 1000):
     h_fc2 = tf.nn.relu(h_fc2)
 
     y_conv = tf.nn.softmax(tf.matmul(h_fc2, W_fc3) + b_fc3)
-    
+
     result = sess.run(y_conv)
 
     if(x_label.argmax() == result[0].argmax()):
@@ -134,5 +157,14 @@ for i in range(0, 1000):
         print('conv2 : ', sess.run(h_conv2))
         print('fc1 : ', sess.run(h_fc1))
         print('fc2 : ', sess.run(h_fc2))
+
+    if(print_weight_channel):
+        print('x_image : ', x_image.shape)
+        print('W_conv1 : ', W_conv1)
+        print('h_conv1 : ', h_conv1)
+        print('h_pool1 : ', h_pool1)
+        print('W_conv2 : ', W_conv2)
+        print('h_conv2 : ', h_conv2)
+        print('h_pool2 : ', h_pool2)
 
 print('count : ', count)

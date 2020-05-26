@@ -80,7 +80,7 @@ sess.run(tf.global_variables_initializer())
 
 saver = tf.train.Saver()
 
-for i in range(1, 12000+1):
+for i in range(0, 12000):
   batch = mnist.train.next_batch(100)
   if i%100 == 0:
 
@@ -92,6 +92,15 @@ for i in range(1, 12000+1):
     #    saver.save(sess, './save/mdc_session', global_step=i)
 
     print("step %d, training accuracy %g"%(i, train_accuracy))
+
+  if i%2000 == 0:
+      W_conv1_re = sess.run(W_conv1).reshape(9, 8)
+      np.savetxt('./mnist_training_weight/W_conv1_int_%d.txt'%(i), W_conv1_re)
+      W_conv2_re = sess.run(W_conv2).reshape(9, 128)
+      np.savetxt('./mnist_training_weight/W_conv2_int_%d.txt'%(i), W_conv2_re)
+      np.savetxt('./mnist_training_weight/W_fc1_int_%d.txt'%(i), sess.run(W_fc1))
+      np.savetxt('./mnist_training_weight/W_fc2_int_%d.txt'%(i), sess.run(W_fc2))
+      np.savetxt('./mnist_training_weight/W_fc3_int_%d.txt'%(i), sess.run(W_fc3))
 
   #train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
   train_step.run(feed_dict={x: batch[0], y_: batch[1]})

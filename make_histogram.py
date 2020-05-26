@@ -32,7 +32,7 @@ C_softmax = tf.nn.softmax(C_)
 
 print('softmax_C : ', sess.run(C_softmax))
 '''
-
+'''
 a = 0.25
 a_ = a * (pow(2, 5)-1)
 print('a_ : ', a_)
@@ -92,3 +92,59 @@ plt.hist(W_fc3, bins = [-16, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3
 plt.title('W_fc3')
 plt.show()
 plt.clf()
+'''
+
+for i in range(0, 14000, 2000):
+  if i%2000 == 0:
+
+      W_conv1 = np.genfromtxt('./mnist_training_weight/W_conv1_int_%d.txt'%(i))
+      W_conv1 = W_conv1.reshape(72)
+      print(W_conv1.shape)
+
+      W_conv2 = np.genfromtxt('./mnist_training_weight/W_conv2_int_%d.txt'%(i))
+      W_conv2 = W_conv2.reshape(9 * 128)
+      print(W_conv2.shape)
+
+      W_fc1 = np.genfromtxt('./mnist_training_weight/W_fc1_int_%d.txt'%(i))
+      W_fc1 = W_fc1.reshape(400 * 120)
+
+      W_fc2 = np.genfromtxt('./mnist_training_weight/W_fc2_int_%d.txt'%(i))
+      W_fc2 = W_fc2.reshape(120 * 84)
+
+      W_fc3 = np.genfromtxt('./mnist_training_weight/W_fc3_int_%d.txt'%(i))
+      W_fc3 = W_fc3.reshape(84 * 10)
+
+      plt.hist(W_conv1, bins = [-0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05,  0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+      plt.title('W_conv1_%d'%(i))
+      plt.ylim(0,20)
+      plt.savefig('./weight_distribution_histogram/W_conv1_%d.png'%(i))
+      plt.show()
+      plt.clf()
+
+      plt.hist(W_conv2, bins = [-0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05,  0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+      plt.title('W_conv2_%d'%(i))
+      plt.ylim(0,300)
+      plt.savefig('./weight_distribution_histogram/W_conv2_%d.png'%(i))
+      plt.show()
+      plt.clf()
+
+      plt.hist(W_fc1, bins = [-0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05,  0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+      plt.title('W_fc1_%d'%(i))
+      plt.ylim(0,10000)
+      plt.savefig('./weight_distribution_histogram/W_fc1_%d.png'%(i))
+      plt.show()
+      plt.clf()
+
+      plt.hist(W_fc2, bins = [-0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05,  0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+      plt.title('W_fc2_%d'%(i))
+      plt.ylim(0,2500)
+      plt.savefig('./weight_distribution_histogram/W_fc2_%d.png'%(i))
+      plt.show()
+      plt.clf()
+
+      plt.hist(W_fc3, bins = [-0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05,  0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+      plt.title('W_fc3_%d'%(i))
+      plt.ylim(0,200)
+      plt.savefig('./weight_distribution_histogram/W_fc3_%d.png'%(i))
+      plt.show()
+      plt.clf()
